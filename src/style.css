@@ -1,9 +1,10 @@
 :root {
   --slate-ground: #3d4f6a;
   --slate-dark: #2a3548;
-  --cave-bg: #0f1420;
+  --cave-bg: #0b0e14;
   --text: #e8eef8;
   --accent: #6efbff;
+  --game-aspect: 16 / 9;
 }
 
 * {
@@ -19,23 +20,33 @@ html {
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   width: 100%;
-  min-height: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
-  background: var(--cave-bg);
+  background-color: var(--cave-bg);
   color: var(--text);
   font-family: system-ui, -apple-system, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#app {
-  width: min(100vw, calc(100dvh * 16 / 9));
-  height: min(100dvh, calc(100vw * 9 / 16));
+/* Full dynamic viewport — avoids mobile URL bar clipping the playfield */
+.game-container,
+#app.game-container {
+  position: relative;
+  width: 100vw;
+  width: 100dvw;
+  height: 100dvh;
+  max-width: 100%;
   max-height: 100dvh;
-  margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 #app.app--hidden {
@@ -91,12 +102,16 @@ body {
   }
 }
 
+.game-container__stage,
 #stage-wrap {
   position: relative;
   width: 100%;
   height: 100%;
-  flex: 1;
-  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: #000;
   touch-action: none;
   -webkit-user-select: none;
@@ -106,8 +121,13 @@ body {
 
 #game-canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: var(--game-aspect);
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -140,7 +160,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: max(0.75rem, env(safe-area-inset-top, 0px))
+    max(0.75rem, env(safe-area-inset-right, 0px))
+    max(0.75rem, env(safe-area-inset-bottom, 0px))
+    max(0.75rem, env(safe-area-inset-left, 0px));
+  max-height: 100dvh;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .modal.hidden {
@@ -168,15 +194,18 @@ body {
 }
 
 .modal-content-card,
-.modal-card,
-.modal-content-card {
+.modal-card {
   position: relative;
   z-index: 1;
   background: #ffffff;
-  border-radius: 28px;
-  padding: 24px;
-  max-width: 360px;
-  width: min(360px, 100%);
+  border-radius: 24px;
+  padding: 16px;
+  width: 90vw;
+  max-width: 420px;
+  max-height: 85dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow:
     0 4px 30px rgba(0, 0, 0, 0.06),
     0 1px 3px rgba(0, 0, 0, 0.04);
@@ -186,6 +215,7 @@ body {
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   animation: m3RevealScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-sizing: border-box;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -198,25 +228,28 @@ body {
 .modal-title,
 .modal-message {
   color: #1c1b1f;
-  font-size: 22px;
-  font-weight: 500;
-  margin-bottom: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 2px 0;
 }
 
 .modal-subtitle {
   color: #49454f;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
-  margin-bottom: 20px;
+  margin: 0 0 12px 0;
   line-height: 1.4;
+  text-align: center;
 }
 
 .modal-image-container {
-  width: 100%;
+  width: auto;
+  height: 40dvh;
+  max-height: 200px;
   aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   background: #f4f3f7;
 }
 
@@ -227,7 +260,6 @@ body {
   object-fit: cover;
   border-radius: 0;
   margin-bottom: 0;
-  max-height: none;
   background: #f4f3f7;
 }
 
@@ -243,13 +275,13 @@ body {
   justify-content: center;
   width: auto;
   min-width: 120px;
-  padding: 10px 24px;
-  height: 40px;
+  padding: 8px 20px;
+  height: 36px;
   background: #000000;
   color: #ffffff;
   border: none;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.1px;
   cursor: pointer;
@@ -272,8 +304,8 @@ body {
   background: transparent;
   color: #666666;
   border: none;
-  margin-top: 12px;
-  font-size: 13px;
+  margin-top: 8px;
+  font-size: 12px;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -281,12 +313,26 @@ body {
 @media (max-width: 720px) {
   .hint {
     font-size: 0.7rem;
-    bottom: 0.4rem;
+    bottom: max(0.4rem, env(safe-area-inset-bottom, 0px));
   }
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
   .hint {
     font-size: 0.65rem;
+  }
+}
+
+@media (max-height: 420px) and (orientation: landscape) {
+  .modal-content-card,
+  .modal-card {
+    max-height: 90dvh;
+    padding: 12px;
+  }
+
+  .modal-image-container {
+    height: 32dvh;
+    max-height: 140px;
+    margin-bottom: 8px;
   }
 }
