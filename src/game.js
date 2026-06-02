@@ -509,7 +509,13 @@ export class MiningGame {
     const cave = this.sprites?.cave;
 
     if (cave?.complete && cave.naturalWidth) {
-      ctx.drawImage(cave, 0, 0, baseWidth, baseHeight);
+      const imgScale = baseHeight / cave.naturalHeight;
+      const newWidth = cave.naturalWidth * imgScale;
+      const xOffset = (baseWidth - newWidth) / 2;
+
+      ctx.fillStyle = '#0b0e14';
+      ctx.fillRect(0, 0, baseWidth, baseHeight);
+      ctx.drawImage(cave, xOffset, 0, newWidth, baseHeight);
     } else {
       const grad = ctx.createLinearGradient(0, 0, 0, baseHeight);
       grad.addColorStop(0, '#1a2848');
