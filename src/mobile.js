@@ -1,19 +1,18 @@
 /**
- * Portrait prompt + responsive stage sizing for mobile landscape play.
+ * Portrait-first play: prompt landscape phone users to rotate upright.
  */
 export function initMobileUI() {
   const rotatePrompt = document.getElementById('rotate-prompt');
   const app = document.getElementById('app');
 
-  const isPortraitMobile = () => {
-    const portrait = window.matchMedia('(orientation: portrait)').matches;
-    const narrow = window.innerWidth < 900;
-    const short = window.innerHeight > window.innerWidth;
-    return portrait && narrow && short;
+  const isLandscapeMobile = () => {
+    const landscape = window.matchMedia('(orientation: landscape)').matches;
+    const phoneLike = Math.min(window.innerWidth, window.innerHeight) < 520;
+    return landscape && phoneLike;
   };
 
   const updateOrientation = () => {
-    const show = isPortraitMobile();
+    const show = isLandscapeMobile();
     rotatePrompt?.classList.toggle('visible', show);
     if (app) {
       app.classList.toggle('app--hidden', show);
@@ -22,9 +21,9 @@ export function initMobileUI() {
 
   updateOrientation();
   window.addEventListener('resize', updateOrientation);
-  window.matchMedia('(orientation: portrait)').addEventListener('change', updateOrientation);
+  window.matchMedia('(orientation: landscape)').addEventListener('change', updateOrientation);
 
-  return { isPortraitMobile, updateOrientation };
+  return { isLandscapeMobile, updateOrientation };
 }
 
 /**

@@ -1,4 +1,5 @@
 import {
+  CANVAS_DPR,
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   CLAW,
@@ -76,6 +77,7 @@ export class MiningGame {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.callbacks = callbacks;
+    this.setupPortraitCanvas();
 
     this.gamePhase = GamePhase.Intro;
     this.state = HookState.Swinging;
@@ -118,11 +120,35 @@ export class MiningGame {
     loadSprites()
       .then((sprites) => {
         this.sprites = sprites;
+        if (!sprites.miner?.complete) {
+          console.error(
+            'Miner sprite unavailable — expected',
+            'assets/sprites/miner.png (lowercase .png)',
+          );
+        }
+        if (!sprites.cave?.complete) {
+          console.error(
+            'Cave background unavailable — expected',
+            'assets/sprites/cave-bg.png (hyphen, lowercase)',
+          );
+        }
         this.resetMinerPosition(true);
         this.updatePivot();
         this.callbacks.onReady?.();
       })
       .catch((err) => console.warn('Sprite load failed, using fallbacks:', err));
+  }
+
+  /** 9:16 logical space (540×960) at 2× backing store for crisp mobile rendering */
+  setupPortraitCanvas() {
+    const baseWidth = CANVAS_WIDTH;
+    const baseHeight = CANVAS_HEIGHT;
+
+    this.canvas.width = baseWidth * CANVAS_DPR;
+    this.canvas.height = baseHeight * CANVAS_DPR;
+    this.canvas.style.width = '100vw';
+    this.canvas.style.height = '100dvh';
+    this.ctx.setTransform(CANVAS_DPR, 0, 0, CANVAS_DPR, 0, 0);
   }
 
   getMinerDimensions() {
@@ -383,7 +409,7 @@ export class MiningGame {
     if (cos > 0.01) limits.push((maxY - this.pivotY) / cos);
     if (sin > 0.01) limits.push((maxX - this.pivotX) / sin);
     if (sin < -0.01) limits.push((minX - this.pivotX) / sin);
-    return Math.min(...limits.filter((n) => n > 0), 560);
+    return Math.min(...limits.filter((n) => n > 0), CANVAS_HEIGHT * 0.88);
   }
 
   hitsWallOrBounds() {
@@ -446,8 +472,8 @@ export class MiningGame {
     ctx.save();
     ctx.translate(shakeX, shakeY);
 
-    this.drawGround(ctx);
     this.drawCave(ctx);
+    this.drawGround(ctx);
     this.drawSparkles(ctx);
     this.drawItems(ctx);
     this.drawWinchPlatform(ctx);
@@ -478,27 +504,23 @@ export class MiningGame {
   }
 
   drawCave(ctx) {
+    const baseWidth = CANVAS_WIDTH;
+    const baseHeight = CANVAS_HEIGHT;
     const cave = this.sprites?.cave;
+
     if (cave?.complete && cave.naturalWidth) {
-      const iw = cave.naturalWidth;
-      const ih = cave.naturalHeight;
-      const areaH = CANVAS_HEIGHT - GROUND_HEIGHT;
-      const scale = Math.max(CANVAS_WIDTH / iw, areaH / ih);
-      const dw = iw * scale;
-      const dh = ih * scale;
-      const dx = (CANVAS_WIDTH - dw) / 2;
-      const dy = GROUND_HEIGHT + (areaH - dh) / 2;
-      ctx.drawImage(cave, dx, dy, dw, dh);
+      ctx.drawImage(cave, 0, 0, baseWidth, baseHeight);
     } else {
-      const grad = ctx.createLinearGradient(0, GROUND_HEIGHT, 0, CANVAS_HEIGHT);
+      const grad = ctx.createLinearGradient(0, 0, 0, baseHeight);
       grad.addColorStop(0, '#1a2848');
       grad.addColorStop(0.5, '#241838');
       grad.addColorStop(1, '#120c1c');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, GROUND_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_HEIGHT);
+      ctx.fillRect(0, 0, baseWidth, baseHeight);
     }
+
     ctx.fillStyle = 'rgba(10, 6, 18, 0.2)';
-    ctx.fillRect(0, GROUND_HEIGHT, CANVAS_WIDTH, 40);
+    ctx.fillRect(0, GROUND_HEIGHT, baseWidth, 40);
   }
 
   drawSparkles(ctx) {

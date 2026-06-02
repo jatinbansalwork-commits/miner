@@ -1,4 +1,6 @@
-const SOUND_BASE = '/assets/sounds';
+import { assetUrl } from './assets.js';
+
+const SOUND_BASE = assetUrl('assets/sounds');
 
 /**
  * Arcade audio: prefers MP3 files when present, otherwise Web Audio synthesis.

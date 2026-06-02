@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preload" href="./assets/sprites/cave-bg.png?v=1.0.1" as="image" type="image/png" />
+    <link rel="preload" href="./assets/sprites/miner.png?v=1.0.1" as="image" type="image/png" />
+    <link rel="preload" href="./assets/sprites/claw.png?v=1.0.1" as="image" type="image/png" />
+    <link rel="preload" href="./assets/sprites/diamond.png?v=1.0.1" as="image" type="image/png" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
@@ -11,13 +15,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Diamond Claw Miner — The Proposal Hint</title>
-    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/style.css?v=1.0.1" />
   </head>
   <body>
     <div id="rotate-prompt" class="rotate-prompt" aria-live="polite">
       <div class="rotate-prompt__card">
         <span class="rotate-prompt__icon" aria-hidden="true">↻</span>
-        <p class="rotate-prompt__text">Please rotate your device to landscape to play!</p>
+        <p class="rotate-prompt__text">Please rotate your device to portrait to play!</p>
       </div>
     </div>
 
@@ -25,9 +29,9 @@
       <div id="stage-wrap" class="game-container__stage" tabindex="0">
         <canvas
           id="game-canvas"
-          width="1280"
-          height="720"
-          aria-label="Mining game — tap the screen or press Space to launch the claw"
+          width="1080"
+          height="1920"
+          aria-label="Mining game — tap the screen to launch the claw"
         ></canvas>
         <p id="hint" class="hint">Tap, ↓, or Space — launch claw</p>
       </div>
@@ -50,6 +54,6 @@
       </div>
     </div>
 
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js?v=1.0.1"></script>
   </body>
 </html>
