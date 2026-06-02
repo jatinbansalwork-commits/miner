@@ -146,8 +146,6 @@ export class MiningGame {
 
     this.canvas.width = baseWidth * CANVAS_DPR;
     this.canvas.height = baseHeight * CANVAS_DPR;
-    this.canvas.style.width = '100vw';
-    this.canvas.style.height = '100dvh';
     this.ctx.setTransform(CANVAS_DPR, 0, 0, CANVAS_DPR, 0, 0);
   }
 
