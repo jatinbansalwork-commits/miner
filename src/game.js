@@ -23,9 +23,9 @@ const HookState = {
   Reeling: 'reeling',
 };
 
-const CLAW_DISPLAY_WIDTH = 52;
-const CLAW_DISPLAY_HEIGHT = 52;
-const MINER_DISPLAY_HEIGHT = 68;
+const CLAW_DISPLAY_WIDTH = 65;
+const CLAW_DISPLAY_HEIGHT = 65;
+const MINER_DISPLAY_HEIGHT = 85;
 const GRAB_SHAKE_FRAMES = 10;
 const GRAB_SHAKE_MAGNITUDE = 6;
 const GRAB_SPARK_COUNT = 14;
@@ -163,7 +163,7 @@ export class MiningGame {
   resetMinerPosition(offScreen) {
     const { width, height } = this.getMinerDimensions();
     this.miner.targetX = CANVAS_WIDTH / 2 - width / 2;
-    this.miner.y = GROUND_HEIGHT - height + 4;
+    this.miner.y = 8;
     this.miner.x = offScreen ? -width - 48 : this.miner.targetX;
     this.miner.bobPhase = 0;
     this.updatePivot();

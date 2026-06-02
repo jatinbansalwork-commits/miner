@@ -34,7 +34,10 @@ export const GIFT_CONFIG = [
 export const CANVAS_WIDTH = 540;
 export const CANVAS_HEIGHT = 960;
 export const CANVAS_DPR = 2;
-export const GROUND_HEIGHT = 88;
+/** Top platform strip — kept shallow so the playfield sits high on portrait screens */
+export const GROUND_HEIGHT = 32;
+/** Lifts miner, gems, and walls upward to reclaim sky margin */
+export const WORLD_LIFT_Y = 70;
 
 export const CLAW = {
   cableColor: '#c8d4e8',
@@ -43,7 +46,7 @@ export const CLAW = {
   swingMax: Math.PI * 0.48,
   extendSpeed: 480,
   reelSpeed: 320,
-  clawRadius: 18,
+  clawRadius: 22.5,
 };
 
 export const MINER = {
@@ -56,10 +59,15 @@ export const MINER = {
 export const WALLS = [
   { x1: 0, y1: GROUND_HEIGHT, x2: 88, y2: GROUND_HEIGHT + 150 },
   { x1: CANVAS_WIDTH, y1: GROUND_HEIGHT, x2: CANVAS_WIDTH - 88, y2: GROUND_HEIGHT + 150 },
-  { x1: 0, y1: CANVAS_HEIGHT, x2: 110, y2: CANVAS_HEIGHT - 110 },
-  { x1: CANVAS_WIDTH, y1: CANVAS_HEIGHT, x2: CANVAS_WIDTH - 110, y2: CANVAS_HEIGHT - 110 },
-  { x1: 36, y1: 400, x2: 110, y2: 490 },
-  { x1: 430, y1: 430, x2: 504, y2: 520 },
+  { x1: 0, y1: CANVAS_HEIGHT - WORLD_LIFT_Y, x2: 110, y2: CANVAS_HEIGHT - WORLD_LIFT_Y - 110 },
+  {
+    x1: CANVAS_WIDTH,
+    y1: CANVAS_HEIGHT - WORLD_LIFT_Y,
+    x2: CANVAS_WIDTH - 110,
+    y2: CANVAS_HEIGHT - WORLD_LIFT_Y - 110,
+  },
+  { x1: 36, y1: 330, x2: 110, y2: 420 },
+  { x1: 430, y1: 360, x2: 504, y2: 450 },
 ];
 
 /**
@@ -74,15 +82,15 @@ export const WALLS = [
 
 /** @type {MineItem[]} — diamonds only (no rocks/boulders) */
 export const ITEMS = [
-  { id: 'd1', kind: 'diamond', x: 90, y: 300, radius: 12, weight: 1 },
-  { id: 'd2', kind: 'diamond', x: 270, y: 400, radius: 12, weight: 0.9 },
-  { id: 'special_diamond_medium', kind: 'diamond', x: 410, y: 340, radius: 12, weight: 1 },
-  { id: 'd4', kind: 'diamond', x: 160, y: 500, radius: 12, weight: 1 },
-  { id: 'd5', kind: 'diamond', x: 430, y: 540, radius: 12, weight: 1 },
-  { id: 'special_diamond_cluster', kind: 'diamond', x: 300, y: 620, radius: 12, weight: 1.1 },
-  { id: 'special_diamond_large', kind: 'diamond', x: 200, y: 740, radius: 12, weight: 1.2 },
-  { id: 'd6', kind: 'diamond', x: 390, y: 800, radius: 12, weight: 1 },
-  { id: 'd7', kind: 'diamond', x: 110, y: 660, radius: 12, weight: 0.95 },
+  { id: 'd1', kind: 'diamond', x: 90, y: 230, radius: 12, weight: 1 },
+  { id: 'd2', kind: 'diamond', x: 270, y: 330, radius: 12, weight: 0.9 },
+  { id: 'special_diamond_medium', kind: 'diamond', x: 410, y: 270, radius: 12, weight: 1 },
+  { id: 'd4', kind: 'diamond', x: 160, y: 430, radius: 12, weight: 1 },
+  { id: 'd5', kind: 'diamond', x: 430, y: 470, radius: 12, weight: 1 },
+  { id: 'special_diamond_cluster', kind: 'diamond', x: 300, y: 550, radius: 12, weight: 1.1 },
+  { id: 'special_diamond_large', kind: 'diamond', x: 200, y: 670, radius: 12, weight: 1.2 },
+  { id: 'd6', kind: 'diamond', x: 390, y: 730, radius: 12, weight: 1 },
+  { id: 'd7', kind: 'diamond', x: 110, y: 590, radius: 12, weight: 0.95 },
 ];
 
 export function getGiftForItem(itemId) {
