@@ -52,6 +52,133 @@ body {
   pointer-events: none;
 }
 
+/* ——— Tohfa Arcade: personalization quiz (M3) ——— */
+.m3-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(28, 27, 31, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: max(1rem, env(safe-area-inset-top, 0px))
+    max(1rem, env(safe-area-inset-right, 0px))
+    max(1rem, env(safe-area-inset-bottom, 0px))
+    max(1rem, env(safe-area-inset-left, 0px));
+  box-sizing: border-box;
+}
+
+.m3-modal-overlay.hidden {
+  display: none;
+}
+
+@keyframes animate-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.m3-quiz-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 32px 24px;
+  width: 88vw;
+  max-width: 350px;
+  max-height: min(88dvh, 640px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.m3-quiz-card.animate-reveal {
+  animation: animate-reveal 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m3-quiz-card.animate-reveal {
+    animation: none;
+  }
+}
+
+.m3-logo {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  color: #1b5e20;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.m3-quiz-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1c1b1f;
+  margin: 0 0 8px 0;
+}
+
+.m3-quiz-lead {
+  font-size: 13px;
+  color: #49454f;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+.quiz-options-vertical {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.m3-choice-btn {
+  width: 100%;
+  height: 56px;
+  margin-bottom: 12px;
+  background: #f4f3f7;
+  border: 1px solid #79747e;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1c1b1f;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.m3-choice-btn:last-child {
+  margin-bottom: 0;
+}
+
+.m3-choice-btn:active {
+  background: #e1dfe3;
+  transform: scale(0.98);
+}
+
+.m3-choice-btn:focus-visible {
+  outline: 2px solid #1b5e20;
+  outline-offset: 2px;
+}
+
+.btn-emoji {
+  font-size: 18px;
+  margin-right: 12px;
+}
+
 .rotate-prompt {
   display: none;
   position: fixed;
@@ -205,8 +332,13 @@ canvas,
   pointer-events: auto;
 }
 
-.modal.hidden {
-  display: none;
+.modal.hidden,
+#game-reward-modal.hidden {
+  display: none !important;
+}
+
+#game-reward-modal:not(.hidden) {
+  display: flex;
 }
 
 @keyframes m3RevealScale {
@@ -330,10 +462,15 @@ canvas,
   letter-spacing: 0.1px;
   cursor: pointer;
   text-decoration: none;
+  font-family: inherit;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition:
     background-color 0.2s,
     transform 0.1s;
+}
+
+#modal-primary-btn {
+  border: none;
 }
 
 .btn-view-ring:hover {

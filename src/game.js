@@ -4,12 +4,11 @@ import {
   CANVAS_WIDTH,
   CLAW,
   GROUND_HEIGHT,
-  GIFT_CONFIG,
   ITEMS,
   MINER,
   WALLS,
-  getGiftForItem,
 } from './config.js';
+import { CURATED_TRIGGER_IDS, getActivePool } from './tohfaCatalog.js';
 import { loadSprites } from './assets.js';
 
 const GamePhase = {
@@ -64,7 +63,7 @@ export class MiningGame {
   /**
    * @param {HTMLCanvasElement} canvas
    * @param {{
-   *   onGift: (gift: import('./config.js').GiftConfig) => void,
+   *   onGift: (item: import('./config.js').MineItem & { affiliateData?: import('./tohfaCatalog.js').TohfaCatalogEntry | null, isSurprise?: boolean }) => void,
    *   onReady?: () => void,
    *   onClawStart?: () => void,
    *   onClawStop?: () => void,
@@ -86,6 +85,9 @@ export class MiningGame {
     this.length = 36;
     this.attached = null;
     this.paused = false;
+    this.quizLocked = true;
+    /** @type {{ aesthetic?: string } | null} */
+    this.quizProfile = null;
     this._clawActive = false;
     this.pivotX = CANVAS_WIDTH / 2;
     this.pivotY = GROUND_HEIGHT - 10;
@@ -182,6 +184,8 @@ export class MiningGame {
   resetItems() {
     this.items = ITEMS.map((item) => ({
       ...item,
+      isSurprise: CURATED_TRIGGER_IDS.includes(item.id),
+      affiliateData: null,
       collected: false,
       active: true,
     }));
@@ -236,7 +240,7 @@ export class MiningGame {
         return;
       }
 
-      if (this.paused || this.gamePhase !== GamePhase.Playing) {
+      if (!this.isPlayable() || this.gamePhase !== GamePhase.Playing) {
         return;
       }
 
@@ -271,11 +275,37 @@ export class MiningGame {
     this.paused = false;
   }
 
+  /** @param {{ aesthetic?: string }} profile */
+  applyQuizProfile(profile) {
+    this.quizProfile = profile;
+  }
+
+  assignAffiliatePoolToMap() {
+    const pool = getActivePool();
+    let surpriseIndex = 0;
+
+    this.items.forEach((item) => {
+      if (item.isSurprise && pool.length) {
+        item.affiliateData = pool[surpriseIndex % pool.length];
+        surpriseIndex++;
+      }
+    });
+  }
+
+  releaseQuizLock() {
+    this.quizLocked = false;
+    this.paused = false;
+  }
+
+  isPlayable() {
+    return !this.quizLocked && !this.paused;
+  }
+
   launch() {
     if (
       this.gamePhase !== GamePhase.Playing ||
       this.state !== HookState.Swinging ||
-      this.paused
+      !this.isPlayable()
     ) {
       return false;
     }
@@ -318,6 +348,10 @@ export class MiningGame {
   }
 
   update(dt) {
+    if (this.quizLocked) {
+      return;
+    }
+
     this.updateGrabSparks();
 
     if (this.gamePhase === GamePhase.Intro) {
@@ -447,11 +481,10 @@ export class MiningGame {
   bankItem(item) {
     item.active = false;
 
-    const gift = getGiftForItem(item.id);
-    if (gift) {
+    if (item.affiliateData) {
       this.callbacks.onProposalReveal?.();
       this.pause();
-      this.callbacks.onGift(gift);
+      this.callbacks.onGift(item);
     }
   }
 
@@ -548,7 +581,7 @@ export class MiningGame {
       const py = item === this.attached ? this.tip.y : item.y;
       const r = item.radius;
 
-      const isSurprise = GIFT_CONFIG.some((gift) => gift.trigger_item_id === item.id);
+      const isSurprise = Boolean(item.isSurprise && item.affiliateData);
 
       if (isSurprise) {
         ctx.save();

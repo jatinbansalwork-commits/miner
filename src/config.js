@@ -1,35 +1,3 @@
-import { assetUrl } from './assets.js';
-
-/** @typedef {{ id: string, trigger_item_id: string, title: string, subtitle: string, image: string, url: string }} GiftConfig */
-
-/** CaratLane gift reveals */
-export const GIFT_CONFIG = [
-  {
-    id: 'gift_diamond_1',
-    trigger_item_id: 'special_diamond_large',
-    title: 'You found it! 💎',
-    subtitle: 'Glamore 925 Silver Diamond Necklace',
-    image: assetUrl('assets/glamore_necklace.jpg'),
-    url: 'https://www.caratlane.com/jewellery/glamore-925-silver-diamond-necklace-bl01014-sss3re.html',
-  },
-  {
-    id: 'gift_diamond_2',
-    trigger_item_id: 'special_diamond_medium',
-    title: 'You found it! 💍',
-    subtitle: 'Nina Diamond Band',
-    image: assetUrl('assets/nina_band.jpg'),
-    url: 'https://www.caratlane.com/jewellery/nina-diamond-band-jr01683-1ys300.html',
-  },
-  {
-    id: 'gift_diamond_3',
-    trigger_item_id: 'special_diamond_cluster',
-    title: 'You found it! ✨',
-    subtitle: 'Sun Glance Gemstone Ring',
-    image: assetUrl('assets/sun_glance_ring.jpg'),
-    url: 'https://www.caratlane.com/jewellery/sun-glance-gemstone-ring-jr09935-ygs3ci.html',
-  },
-];
-
 /** Portrait logical blueprint (9:16) */
 export const CANVAS_WIDTH = 540;
 export const CANVAS_HEIGHT = 960;
@@ -93,10 +61,4 @@ export const ITEMS = [
   { id: 'd7', kind: 'diamond', x: 110, y: 590, radius: 12, weight: 0.95 },
 ];
 
-export function getGiftForItem(itemId) {
-  return GIFT_CONFIG.find((g) => g.trigger_item_id === itemId) ?? null;
-}
-
-export function isGiftItem(itemId) {
-  return GIFT_CONFIG.some((g) => g.trigger_item_id === itemId);
-}
+export { CURATED_TRIGGER_IDS } from './tohfaCatalog.js';

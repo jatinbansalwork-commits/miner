@@ -1,16 +1,14 @@
 import { MiningGame } from './game.js';
 import { AudioManager } from './AudioManager.js';
 import { initMobileUI, bindTouchGuards } from './mobile.js';
+import { initTohfaQuiz } from './tohfaQuiz.js';
+import { closeGiftReveal, triggerGiftReveal } from './giftReveal.js';
 
 const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('game-canvas'));
 const stageWrap = /** @type {HTMLElement} */ (document.getElementById('stage-wrap'));
 const hintEl = document.getElementById('hint');
 
-const giftModal = document.getElementById('gift-modal');
-const giftTitle = document.getElementById('gift-title');
-const giftSubtitle = document.getElementById('gift-subtitle');
-const giftImage = /** @type {HTMLImageElement} */ (document.getElementById('gift-image'));
-const giftLink = /** @type {HTMLAnchorElement} */ (document.getElementById('gift-link'));
+const giftModal = document.getElementById('game-reward-modal');
 const giftClose = document.getElementById('gift-close');
 
 const audio = new AudioManager();
@@ -28,6 +26,7 @@ window.addEventListener('keydown', unlockAudio, { passive: true });
 
 const game = new MiningGame(canvas, {
   onIntroComplete: () => {
+    if (game.quizLocked) return;
     audio.playReady();
     hintEl.style.opacity = '1';
   },
@@ -39,20 +38,25 @@ const game = new MiningGame(canvas, {
     }
   },
   onProposalReveal: () => audio.playReveal(),
-  onGift: (gift) => {
-    giftTitle.textContent = gift.title;
-    giftSubtitle.textContent = gift.subtitle;
-    giftImage.src = gift.image;
-    giftImage.alt = gift.subtitle;
-    giftLink.href = gift.url;
-    giftLink.textContent = 'View Details';
-    giftModal.classList.remove('hidden');
+  onGift: (item) => {
+    triggerGiftReveal(item);
     hintEl.style.opacity = '0';
   },
 });
 
+game.pause();
+
+initTohfaQuiz({
+  game,
+  onComplete: (profile) => {
+    game.applyQuizProfile(profile);
+    game.releaseQuizLock();
+    unlockAudio();
+  },
+});
+
 function closeGiftModal() {
-  giftModal.classList.add('hidden');
+  closeGiftReveal();
   hintEl.style.opacity = '1';
   audio.resumeBgm();
   game.resume();

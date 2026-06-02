@@ -14,7 +14,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Diamond Claw Miner — The Proposal Hint</title>
+    <title>Tohfa Arcade — Gift Claw Miner</title>
     <link rel="stylesheet" href="/src/style.css?v=1.0.1" />
   </head>
   <body>
@@ -26,6 +26,37 @@
     </div>
 
     <div id="app" class="game-container">
+      <div
+        id="tohfa-quiz-screen"
+        class="m3-modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tohfa-quiz-heading"
+      >
+        <div class="m3-quiz-card animate-reveal">
+          <div class="m3-logo">🎁 tohfa arcade</div>
+          <h1 id="tohfa-quiz-heading" class="m3-quiz-title">Find the perfect gift in 1 minute!</h1>
+          <p class="m3-quiz-lead">Choose her design aura to fill the cave with custom treasures:</p>
+
+          <div class="quiz-step" data-step="1">
+            <div class="quiz-options-vertical">
+              <button type="button" class="m3-choice-btn" data-meta="aesthetic" data-value="minimalist">
+                <span class="btn-emoji" aria-hidden="true">🌿</span>
+                Minimalist Modern
+              </button>
+              <button type="button" class="m3-choice-btn" data-meta="aesthetic" data-value="classic">
+                <span class="btn-emoji" aria-hidden="true">✨</span>
+                Classic Elegance
+              </button>
+              <button type="button" class="m3-choice-btn" data-meta="aesthetic" data-value="glamour">
+                <span class="btn-emoji" aria-hidden="true">💎</span>
+                Bold Glamour
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="stage-wrap" class="game-container__stage" tabindex="0">
         <canvas
           id="game-canvas"
@@ -36,18 +67,22 @@
         <p id="hint" class="hint tap-instruction-text">Tap anywhere to launch claw</p>
       </div>
 
-      <div id="gift-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gift-title">
+      <div
+        id="game-reward-modal"
+        class="modal hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title-node"
+      >
         <div class="modal-overlay modal-backdrop"></div>
         <div class="modal-content-card modal-card">
-          <p id="gift-title" class="modal-title"></p>
-          <p id="gift-subtitle" class="modal-subtitle"></p>
+          <p id="modal-title-node" class="modal-title"></p>
+          <p id="modal-subtitle-node" class="modal-subtitle"></p>
           <div class="modal-image-container">
-            <img id="gift-image" class="modal-image" alt="Jewelry hint" />
+            <img id="modal-img-node" class="modal-image" alt="" />
           </div>
           <div class="modal-actions">
-            <a id="gift-link" class="btn-view-ring" href="#" target="_blank" rel="noopener noreferrer"
-              >View Details</a
-            >
+            <button id="modal-primary-btn" type="button" class="btn-view-ring">View Details</button>
             <button id="gift-close" type="button" class="btn-keep-mining">Keep mining</button>
           </div>
         </div>
