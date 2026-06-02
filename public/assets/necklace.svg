@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fafafa"/>
+  <path d="M200 40 Q260 120 200 200 Q140 120 200 40" fill="none" stroke="#c0c0c0" stroke-width="4"/>
+  <circle cx="200" cy="200" r="28" fill="#e8f4ff" stroke="#9fffff" stroke-width="2"/>
+  <text x="200" y="270" text-anchor="middle" fill="#888" font-family="system-ui,sans-serif" font-size="13">Necklace placeholder</text>
+</svg>

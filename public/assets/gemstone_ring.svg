@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fafafa"/>
+  <circle cx="200" cy="190" r="50" fill="none" stroke="#d4af37" stroke-width="5"/>
+  <path d="M200 120 L230 200 L200 240 L170 200 Z" fill="#ffe08a" stroke="#e6a820" stroke-width="1"/>
+  <text x="200" y="270" text-anchor="middle" fill="#888" font-family="system-ui,sans-serif" font-size="13">Ring placeholder</text>
+</svg>

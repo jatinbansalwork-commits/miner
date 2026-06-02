@@ -3,11 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>diamond-claw-miner</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Diamond Claw Miner — The Proposal Hint</title>
+    <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="rotate-prompt" class="rotate-prompt" aria-live="polite">
+      <div class="rotate-prompt__card">
+        <span class="rotate-prompt__icon" aria-hidden="true">↻</span>
+        <p class="rotate-prompt__text">Please rotate your device to landscape to play!</p>
+      </div>
+    </div>
+
+    <div id="app">
+      <div id="stage-wrap" tabindex="0">
+        <canvas
+          id="game-canvas"
+          width="1280"
+          height="720"
+          aria-label="Mining game — tap the screen or press Space to launch the claw"
+        ></canvas>
+        <p id="hint" class="hint">Tap, ↓, or Space — launch claw</p>
+      </div>
+    </div>
+
+    <div id="gift-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gift-title">
+      <div class="modal-overlay modal-backdrop"></div>
+      <div class="modal-content-card modal-card">
+        <p id="gift-title" class="modal-title"></p>
+        <p id="gift-subtitle" class="modal-subtitle"></p>
+        <div class="modal-image-container">
+          <img id="gift-image" class="modal-image" alt="Jewelry hint" />
+        </div>
+        <div class="modal-actions">
+          <a id="gift-link" class="btn-view-ring" href="#" target="_blank" rel="noopener noreferrer"
+            >View Details</a
+          >
+          <button id="gift-close" type="button" class="btn-keep-mining">Keep mining</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

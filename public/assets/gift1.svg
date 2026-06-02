@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#141c2e"/>
+  <ellipse cx="200" cy="200" rx="90" ry="28" fill="#c9a227" opacity="0.9"/>
+  <path d="M200 80 L240 160 L200 200 L160 160 Z" fill="#e8f4ff" stroke="#9fffff" stroke-width="2"/>
+  <circle cx="200" cy="130" r="42" fill="none" stroke="#d4af37" stroke-width="6"/>
+  <text x="200" y="270" text-anchor="middle" fill="#a8b8d0" font-family="Georgia, serif" font-size="14">Marquise Rapture Band</text>
+</svg>
