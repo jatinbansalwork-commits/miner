@@ -18,7 +18,7 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Viewport positioning controls */
+/* Core viewport layout reset */
 html,
 body {
   margin: 0;
@@ -27,6 +27,7 @@ body {
   height: 100%;
   background-color: #0b0e14;
   color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,10 +35,11 @@ body {
   overscroll-behavior: none;
 }
 
+/* Smart layout system wrapper container */
 .game-container,
 #app.game-container {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100dvh;
   display: flex;
   justify-content: center;
@@ -113,32 +115,33 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Fallback global scaling strategy */
+/* Dual-target responsive canvas */
 canvas,
 #game-canvas {
   display: block;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  background-color: #0b0e14;
   width: 100vw;
   height: 100dvh;
   object-fit: fill;
-  background-color: #0b0e14;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Aspect-locked center frame for laptop web browsers */
 @media (min-width: 480px) and (min-aspect-ratio: 1/1) {
   canvas,
   #game-canvas {
-    height: 92dvh;
-    width: calc(92dvh * (9 / 16));
-    border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.08);
+    height: 90dvh;
+    width: calc(90dvh * (9 / 16));
+    border-radius: 16px;
+    object-fit: contain;
+    border: 2px solid rgba(255, 255, 255, 0.05);
   }
 
   .game-container__stage,
   #stage-wrap {
-    width: calc(92dvh * (9 / 16));
-    height: 92dvh;
+    width: calc(90dvh * (9 / 16));
+    height: 90dvh;
   }
 }
 
@@ -178,11 +181,14 @@ canvas,
   }
 }
 
-/* Gift modal — light engagement card */
+/* Gift modal — scoped to .game-container on desktop and mobile */
 .modal {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -190,9 +196,13 @@ canvas,
     max(0.75rem, env(safe-area-inset-right, 0px))
     max(0.75rem, env(safe-area-inset-bottom, 0px))
     max(0.75rem, env(safe-area-inset-left, 0px));
-  max-height: 100dvh;
   overflow: hidden;
   box-sizing: border-box;
+  pointer-events: none;
+}
+
+.modal:not(.hidden) {
+  pointer-events: auto;
 }
 
 .modal.hidden {
@@ -210,14 +220,23 @@ canvas,
   }
 }
 
+/* Lock overlay centering to the parent container viewport */
 .modal-overlay,
 .modal-backdrop {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
   background: rgba(28, 27, 31, 0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: opacity 0.3s ease;
+  pointer-events: auto;
 }
 
 .modal-content-card,
@@ -227,13 +246,16 @@ canvas,
   pointer-events: auto;
   background: #ffffff;
   border-radius: 28px;
-  padding: 20px;
+  padding: 24px;
   width: 85vw;
   max-width: 340px;
   max-height: 70dvh;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   align-items: center;
