@@ -161,22 +161,21 @@ export class MiningGame {
   resetMinerPosition(offScreen) {
     const { width, height } = this.getMinerDimensions();
     this.miner.targetX = CANVAS_WIDTH / 2 - width / 2;
-    this.miner.y = 180;
+    // Move him from 180 up onto the top gray ledge surface line
+    this.miner.y = 100;
     this.miner.x = offScreen ? -width - 48 : this.miner.targetX;
     this.miner.bobPhase = 0;
     this.updatePivot();
   }
 
   updatePivot() {
-    const { width } = this.getMinerDimensions();
     const bob =
       this.gamePhase === GamePhase.Intro && this.miner.x < this.miner.targetX
         ? Math.sin(this.miner.bobPhase) * 3
         : 0;
-    const groundOffset = MINER.groundDrawOffset;
-    // Re-anchored to miner base center line (platform / boot shadow)
-    this.pivotX = this.miner.x + width / 2;
-    this.pivotY = this.miner.y + bob + groundOffset + MINER.pivotFootOffsetY;
+    // Synchronize the cable rotation hub to his boots baseline
+    this.pivotX = this.miner.x;
+    this.pivotY = this.miner.y + bob + 40;
   }
 
   resetItems() {
