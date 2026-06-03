@@ -161,8 +161,8 @@ export class MiningGame {
   resetMinerPosition(offScreen) {
     const { width, height } = this.getMinerDimensions();
     this.miner.targetX = CANVAS_WIDTH / 2 - width / 2;
-    // Lift him 100px onto the gray walkway (y decreases upward)
-    this.miner.y = -25;
+    // Boots on gray walkway (y +30px down from prior -25)
+    this.miner.y = 5;
     this.miner.x = offScreen ? -width - 48 : this.miner.targetX;
     this.miner.bobPhase = 0;
     this.updatePivot();
@@ -174,7 +174,7 @@ export class MiningGame {
         ? Math.sin(this.miner.bobPhase) * 3
         : 0;
     // Synchronize the cable rotation hub to his boots baseline
-    this.pivotX = this.miner.x;
+    this.pivotX = this.miner.x + 10;
     // Drop the starting rope origin beneath his feet shadow line
     this.pivotY = this.miner.y + bob + 55;
   }
