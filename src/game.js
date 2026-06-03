@@ -3,12 +3,13 @@ import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   CLAW,
+  GIFT_CONFIG,
   GROUND_HEIGHT,
   ITEMS,
   MINER,
   WALLS,
+  getGiftForItem,
 } from './config.js';
-import { CURATED_TRIGGER_IDS, getActivePool } from './tohfaCatalog.js';
 import { loadSprites } from './assets.js';
 
 const GamePhase = {
@@ -25,7 +26,7 @@ const HookState = {
 const CLAW_DISPLAY_WIDTH = 65;
 const CLAW_DISPLAY_HEIGHT = 65;
 const MINER_DISPLAY_HEIGHT = 85;
-const GRAB_SHAKE_FRAMES = 10;
+const GRAB_SHAKE_FRAMES = 12;
 const GRAB_SHAKE_MAGNITUDE = 6;
 const GRAB_SPARK_COUNT = 14;
 
@@ -63,7 +64,7 @@ export class MiningGame {
   /**
    * @param {HTMLCanvasElement} canvas
    * @param {{
-   *   onGift: (item: import('./config.js').MineItem & { affiliateData?: import('./tohfaCatalog.js').TohfaCatalogEntry | null, isSurprise?: boolean }) => void,
+   *   onGift: (gift: import('./config.js').GiftConfig) => void,
    *   onReady?: () => void,
    *   onClawStart?: () => void,
    *   onClawStop?: () => void,
@@ -85,9 +86,6 @@ export class MiningGame {
     this.length = 36;
     this.attached = null;
     this.paused = false;
-    this.quizLocked = true;
-    /** @type {{ aesthetic?: string } | null} */
-    this.quizProfile = null;
     this._clawActive = false;
     this.pivotX = CANVAS_WIDTH / 2;
     this.pivotY = GROUND_HEIGHT - 10;
@@ -141,7 +139,7 @@ export class MiningGame {
       .catch((err) => console.warn('Sprite load failed, using fallbacks:', err));
   }
 
-  /** 9:16 logical space (540×960) at 2× backing store for crisp mobile rendering */
+  /** A. Core engine resolution blueprint — 9:16 portrait at 2× DPR */
   setupPortraitCanvas() {
     const baseWidth = CANVAS_WIDTH;
     const baseHeight = CANVAS_HEIGHT;
@@ -163,7 +161,7 @@ export class MiningGame {
   resetMinerPosition(offScreen) {
     const { width, height } = this.getMinerDimensions();
     this.miner.targetX = CANVAS_WIDTH / 2 - width / 2;
-    this.miner.y = 8;
+    this.miner.y = 180;
     this.miner.x = offScreen ? -width - 48 : this.miner.targetX;
     this.miner.bobPhase = 0;
     this.updatePivot();
@@ -184,8 +182,6 @@ export class MiningGame {
   resetItems() {
     this.items = ITEMS.map((item) => ({
       ...item,
-      isSurprise: CURATED_TRIGGER_IDS.includes(item.id),
-      affiliateData: null,
       collected: false,
       active: true,
     }));
@@ -240,7 +236,7 @@ export class MiningGame {
         return;
       }
 
-      if (!this.isPlayable() || this.gamePhase !== GamePhase.Playing) {
+      if (this.paused || this.gamePhase !== GamePhase.Playing) {
         return;
       }
 
@@ -275,37 +271,11 @@ export class MiningGame {
     this.paused = false;
   }
 
-  /** @param {{ aesthetic?: string }} profile */
-  applyQuizProfile(profile) {
-    this.quizProfile = profile;
-  }
-
-  assignAffiliatePoolToMap() {
-    const pool = getActivePool();
-    let surpriseIndex = 0;
-
-    this.items.forEach((item) => {
-      if (item.isSurprise && pool.length) {
-        item.affiliateData = pool[surpriseIndex % pool.length];
-        surpriseIndex++;
-      }
-    });
-  }
-
-  releaseQuizLock() {
-    this.quizLocked = false;
-    this.paused = false;
-  }
-
-  isPlayable() {
-    return !this.quizLocked && !this.paused;
-  }
-
   launch() {
     if (
       this.gamePhase !== GamePhase.Playing ||
       this.state !== HookState.Swinging ||
-      !this.isPlayable()
+      this.paused
     ) {
       return false;
     }
@@ -348,10 +318,6 @@ export class MiningGame {
   }
 
   update(dt) {
-    if (this.quizLocked) {
-      return;
-    }
-
     this.updateGrabSparks();
 
     if (this.gamePhase === GamePhase.Intro) {
@@ -481,10 +447,11 @@ export class MiningGame {
   bankItem(item) {
     item.active = false;
 
-    if (item.affiliateData) {
+    const gift = getGiftForItem(item.id);
+    if (gift) {
       this.callbacks.onProposalReveal?.();
       this.pause();
-      this.callbacks.onGift(item);
+      this.callbacks.onGift(gift);
     }
   }
 
@@ -581,7 +548,7 @@ export class MiningGame {
       const py = item === this.attached ? this.tip.y : item.y;
       const r = item.radius;
 
-      const isSurprise = Boolean(item.isSurprise && item.affiliateData);
+      const isSurprise = GIFT_CONFIG.some((gift) => gift.trigger_item_id === item.id);
 
       if (isSurprise) {
         ctx.save();
