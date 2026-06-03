@@ -174,7 +174,7 @@ export class MiningGame {
         ? Math.sin(this.miner.bobPhase) * 3
         : 0;
     // Synchronize the cable rotation hub to his boots baseline
-    this.pivotX = this.miner.x + 10;
+    this.pivotX = this.miner.x + 50;
     // Drop the starting rope origin beneath his feet shadow line
     this.pivotY = this.miner.y + bob + 55;
   }
