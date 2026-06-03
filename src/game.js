@@ -3,7 +3,6 @@ import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   CLAW,
-  GIFT_CONFIG,
   GROUND_HEIGHT,
   ITEMS,
   MINER,
@@ -174,9 +173,9 @@ export class MiningGame {
         ? Math.sin(this.miner.bobPhase) * 3
         : 0;
     // Synchronize the cable rotation hub to his boots baseline
-    this.pivotX = this.miner.x + 50;
+    this.pivotX = this.miner.x + 60;
     // Drop the starting rope origin beneath his feet shadow line
-    this.pivotY = this.miner.y + bob + 55;
+    this.pivotY = this.miner.y + bob + 85;
   }
 
   resetItems() {
@@ -547,21 +546,6 @@ export class MiningGame {
       const px = item === this.attached ? this.tip.x : item.x;
       const py = item === this.attached ? this.tip.y : item.y;
       const r = item.radius;
-
-      const isSurprise = GIFT_CONFIG.some((gift) => gift.trigger_item_id === item.id);
-
-      if (isSurprise) {
-        ctx.save();
-        const gradient = ctx.createRadialGradient(px, py, 2, px, py, r * 2.5);
-        gradient.addColorStop(0, 'rgba(255, 223, 128, 0.6)');
-        gradient.addColorStop(0.5, 'rgba(255, 180, 200, 0.3)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(px, py, r * 2.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
 
       if (diamondImg?.complete) {
         const size = r * 2.4;
