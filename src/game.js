@@ -161,8 +161,8 @@ export class MiningGame {
   resetMinerPosition(offScreen) {
     const { width, height } = this.getMinerDimensions();
     this.miner.targetX = CANVAS_WIDTH / 2 - width / 2;
-    // Lift him slightly so his boots sit cleanly on the gray walkway
-    this.miner.y = 75;
+    // Lift him 100px onto the gray walkway (y decreases upward)
+    this.miner.y = -25;
     this.miner.x = offScreen ? -width - 48 : this.miner.targetX;
     this.miner.bobPhase = 0;
     this.updatePivot();
