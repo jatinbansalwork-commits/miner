@@ -161,8 +161,8 @@ export class MiningGame {
   resetMinerPosition(offScreen) {
     const { width, height } = this.getMinerDimensions();
     this.miner.targetX = CANVAS_WIDTH / 2 - width / 2;
-    // Shifted from 100 to 85 to perfectly align his boots with the center of the gray track strip
-    this.miner.y = 85;
+    // Lift him slightly so his boots sit cleanly on the gray walkway
+    this.miner.y = 75;
     this.miner.x = offScreen ? -width - 48 : this.miner.targetX;
     this.miner.bobPhase = 0;
     this.updatePivot();
@@ -175,7 +175,8 @@ export class MiningGame {
         : 0;
     // Synchronize the cable rotation hub to his boots baseline
     this.pivotX = this.miner.x;
-    this.pivotY = this.miner.y + bob + 35;
+    // Drop the starting rope origin beneath his feet shadow line
+    this.pivotY = this.miner.y + bob + 55;
   }
 
   resetItems() {
